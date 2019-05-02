@@ -13,11 +13,30 @@ body {
     overflow: hidden;
 }
 
+@keyframes slidein {
+  from {
+    transform: translate(0px); 
+  }
+  25%{
+    transform: translate(-700px); 
+  }
+  50%{
+    transform: translate(-700px, 1000px); 
+  }
+  75%{
+    transform: translate(-700px); 
+  }
+  to {
+    transform: translate(0px); 
+  }
+}
+
 h1{
     text-align: center;
     font-size: 100px;
     position: relative;
     top: 60px;
+    animation: slidein 30s infinite;
 }
 .empty {
     width: 50px;
@@ -85,6 +104,8 @@ h1{
     height: 40px;
     bottom: 700px;
     left: 1500px;
+    font-size: 40px;
+    text-align: center;
 }
 #score{
     width: 160px;
@@ -118,7 +139,7 @@ h1{
     <h1>TETRIS</h1>
     <div id='world'></div>
     <div id='details'>
-        <div id='score-title'>SCORE
+        <div id='score-title'>LINES
             <div id='score'>
             </div>
         </div>
@@ -126,9 +147,6 @@ h1{
                 <div id='level'>
                 </div>
             </div>
-        <div>
-
-        </div>
     </div>
     
 </body>
@@ -606,6 +624,9 @@ function levelup(){
         document.getElementById('level').innerHTML = level;
         score_count = 0;
     }
+    if (score_count >= (2*level)){
+        game_speed = 1000-250;
+    }
 }
 document.onkeydown = function(e) {
     console.log(e)
@@ -627,16 +648,20 @@ function gameLoop(){
     moveShapesDown();
     drawWorld();
     levelup();
-    setTimeout(gameLoop, 1000);
+    setTimeout(gameLoop, game_speed);
 }
 
-var score = 0;
-var score_count = 0;
-//score_count keeps the count to know how many lines must be destroyed before next level.The variable is reset at each levelup.
+//initial level, score and game speed
 var level = 1;
+var score = 0;
+var game_speed = 1000;
 
-var count = 0;
+//score_count keeps the count to know how many lines must be destroyed before next level.The variable is reset at each levelup.
+var score_count = 0;
+
 //The variable 'count' is used for rotation of bar shape
+var count = 0;
+
 document.getElementById('score').innerHTML = "0";
 document.getElementById('level').innerHTML = "1";
 drawWorld();

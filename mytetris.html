@@ -1,0 +1,600 @@
+<!-- CSS Code -->
+<style>
+* {
+    outline: 1px dotted red; 
+}
+
+
+body {
+    background-image:    url("my_image.png");
+    background-size:     cover;                      /* <------ */
+    background-repeat:   no-repeat;
+    background-position: center center;              /* optional, center the image */
+}
+.empty {
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+}
+.squareShape {
+    width: 50px;
+    height: 50px;
+    background-color: orange;
+    outline: 2px solid black;
+    /* background-image: url('tetris-piece.png'); */
+    display: inline-block;
+}
+
+.barShape {
+    width: 50px;
+    height: 50px;
+    background-color: green;
+    outline: 2px solid black;
+    /* background-image: url('tetris-piece.png'); */
+    display: inline-block;
+}
+
+.zShape {
+    width: 50px;
+    height: 50px;
+    background-color: blue;
+    outline: 2px solid black;
+    /* background-image: url('tetris-piece.png'); */
+    display: inline-block;
+}
+
+.reverseZshape {
+    width: 50px;
+    height: 50px;
+    background-color: red;
+    outline: 2px solid black;
+    /* background-image: url('tetris-piece.png'); */
+    display: inline-block;
+}
+
+.lShape {
+    width: 50px;
+    height: 50px;
+    background-color: pink;
+    outline: 2px solid black;
+    /* background-image: url('tetris-piece.png'); */
+    display: inline-block;
+}
+
+.pyramid {
+    width: 50px;
+    height: 50px;
+    background-color:violet;
+    outline: 2px solid black;
+    /* background-image: url('tetris-piece.png'); */
+    display: inline-block;
+}
+
+#world{
+    margin-left: 35%;
+}
+
+#score{
+    width: 60px;
+    height: 40px;   
+    position: relative;
+    text-align: center;
+    top: 10px;
+    border-radius: 35px;
+}
+
+#score-title {
+    width: 50px;
+    height: 50px;  
+    outline: 4px solid black;  
+    position: relative;
+    left: 20%;
+    bottom: 700px;
+    font-size: 20px;
+    text-align: center;
+    border-radius: 35px;
+}
+</style>
+
+
+<!-- HTML Code -->
+<body>
+    <div id='world'></div>
+    <div id='score-title'>Score
+        <div id='score'></div>
+    </div>
+</body>
+
+
+<!-- JavaScript Code: -->
+<script>
+var world = [
+    [0,0,0,4,4,0,0,0],
+    [0,0,0,4,4,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+];
+
+function drawWorld() {
+    document.getElementById('world').innerHTML = "";
+    for(var y=0; y<world.length; y++) {
+        for(var x=0; x<world[y].length; x++) {
+            if(world[y][x]=== 0){
+                document.getElementById('world').innerHTML += "<div class='empty'></div>";
+            } else if(world[y][x]=== 1 || world[y][x]=== 11){
+                document.getElementById('world').innerHTML += "<div class='barShape'></div>";
+            } else if(world[y][x]=== 2 || world[y][x]=== 12){
+                document.getElementById('world').innerHTML += "<div class='lShape'></div>";
+            } else if(world[y][x]=== 3 || world[y][x]=== 13){
+                document.getElementById('world').innerHTML += "<div class='zShape'></div>";
+            } else if(world[y][x]=== 4 || world[y][x]=== 14){
+                document.getElementById('world').innerHTML += "<div class='squareShape'></div>";
+            } else if(world[y][x]=== 5 || world[y][x]=== 15){
+                document.getElementById('world').innerHTML += "<div class='reverseZshape'></div>";
+            } else if(world[y][x]=== 6 || world[y][x]=== 16){
+                document.getElementById('world').innerHTML += "<div class='pyramid'></div>";
+            }
+        }
+        document.getElementById('world').innerHTML += "<br>";
+    }
+}
+function moveShapesDown() {
+    canMove = true;
+    for(var y=world.length-1; y>=0; y--) {
+        for(var x=0; x<world[y].length; x++) {
+            if(world[y][x] > 0 && world[y][x] < 10 ){
+                if(y+1 === world.length || world[y+1][x] > 10){
+                    canMove = false;
+                    freeze();
+                }
+            }
+        }
+    }
+    if (canMove) {
+        for(var y=world.length-1; y>=0; y--) {
+            for(var x=0; x<world[y].length; x++) {
+                if(world[y][x] > 0 && world[y][x] < 10 ){
+                    world[y+1][x] = world[y][x];
+                    world[y][x] = 0;
+                }
+            }
+        }
+        drawWorld();
+    }
+    checkLines();
+}
+function moveShapesLeft() {
+    canMove = true;
+    for(var y=world.length-1; y>=0; y--) {
+        for(var x=0; x<world[y].length; x++) {
+            if(world[y][x] > 0 && world[y][x] < 10 ){
+                if(x === 0 || world[y][x-1] > 10){
+                    canMove = false;
+                }
+            }
+        }
+    }
+    if (canMove) {
+        for(var y=world.length-1; y>=0; y--) {
+            for(var x=0; x<world[y].length; x++) {
+                if(world[y][x] > 0 && world[y][x] < 10 ){
+                    world[y][x-1] = world[y][x];
+                    world[y][x] = 0;
+                }
+            }
+        }
+        drawWorld();
+    }
+}
+function moveShapesRight() {
+    canMove = true;
+    for(var y=world.length-1; y>=0; y--) {
+        for(var x=0; x<world[y].length; x++) {
+            if(world[y][x] > 0 && world[y][x] < 10 ){
+                if(x === 7 || world[y][x+1] > 10){
+                    canMove = false;
+                }
+            }
+        }
+    }
+    if (canMove) {
+        for(var y=world.length-1; y>=0; y--) {
+            for(var x=world[y].length; x>=0; x--) {
+                if(world[y][x] > 0 && world[y][x] < 10 ){
+                    world[y][x+1] = world[y][x];
+                    world[y][x] = 0;
+                }
+            }
+        }
+        drawWorld();
+    }
+}
+function rotateShapeRight() {
+    canMove = true;
+    for(var y=world.length-1; y>=0; y--) {
+        for(var x=0; x<world[y].length; x++) {
+            if(world[y][x] > 0 && world[y][x] < 10 ){
+                if(world[y+1][x] > 10 || world[y-1][x] > 10){
+                    canMove = false;
+                }
+            }
+        }
+    }
+    if (canMove) {
+        var turn = 0;
+        //the variable "turn" allows the function to work only once when the first cell of the shape is met by the loop AND not for EVERY cell of the shape
+        for(var y=world.length-1; y>=0; y--) {
+            for(var x=0; x<world[y].length; x++) {
+                if(world[y][x] > 0 && world[y][x] < 10 ){
+                    if (world[y][x] === 1 && turn === 0){
+                        if (world[y-1][x] === 1){
+                            //The barShape (value=1) is VERTICAL
+                            if (count%3 === 0){
+                                //My shape will rotate on the second cell of my shape (from the top)
+                                if (world[y-2][x+1] != 0 && world[y-2][x-1] === 0 && world[y-2][x-2] === 0 && world[y-2][x-3] === 0){
+                                    //If my shape is blocked on the right side but free on the left side
+                                    world[y-2][x-1] = world[y][x];
+                                    world[y-2][x-2] = world[y-1][x];
+                                    world[y-2][x-3] = world[y-3][x];
+                                    //I reset to 0 the cases that should now be empty
+                                    world[y][x] = 0;
+                                    world[y-1][x] = 0;
+                                    world[y-3][x] = 0;
+                                } else if (world[y-2][x-1] != 0 && world[y-2][x+1] === 0 && world[y-2][x+2] === 0 && world[y-2][x+3] === 0){
+                                    //If my shape is blocked on the left side (no space on the left) but free on the right side
+                                    world[y-2][x+1] = world[y][x];
+                                    world[y-2][x+2] = world[y-1][x];
+                                    world[y-2][x+3] = world[y-3][x];  
+                                    //I reset to 0 the cases that should now be empty
+                                    world[y][x] = 0;
+                                    world[y-1][x] = 0;
+                                    world[y-3][x] = 0;
+                                } else if (world[y-2][x-1] === 0 && world[y-2][x-2] === 0 && world[y-2][x+1] === 0){
+                                    //If the shape can move freely
+                                    world[y-2][x-1] = world[y-3][x];
+                                    world[y-2][x+1] = world[y-1][x];
+                                    world[y-2][x-2] = world[y][x];
+                                    //I reset to 0 the cases that should now be empty
+                                    world[y-3][x] = 0;
+                                    world[y-1][x] = 0;
+                                    world[y][x] = 0;
+                                }
+                            } else if (count%3 !== 0){
+                                //My shape will rotate on the third cell of my shape (from the top)
+                                if (world[y-1][x-1] != 0 && world[y-1][x+1] === 0 && world[y-1][x+2] === 0 && world[y-1][x+3] === 0){
+                                    //If my shape is blocked on the left side but free on the right side
+                                    world[y-1][x+1] = world[y][x];
+                                    world[y-1][x+2] = world[y-2][x];
+                                    world[y-1][x+3] = world[y-3][x];  
+                                    //I reset to 0 the cases that should now be empty
+                                    world[y][x] = 0;
+                                    world[y-2][x] = 0;
+                                    world[y-3][x] = 0;
+                                } else if (world[y-1][x+1] != 0 && world[y-1][x-1] === 0 && world[y-1][x-2] === 0 && world[y-1][x-3] === 0) {
+                                    //If my shape is blocked on the right side but free on the left side
+                                    world[y-1][x-1] = world[y][x];
+                                    world[y-1][x-2] = world[y-2][x];
+                                    world[y-1][x-3] = world[y-3][x];
+                                    //I reset to 0 the cases that should now be empty
+                                    world[y][x] = 0;
+                                    world[y-2][x] = 0;
+                                    world[y-3][x] = 0;
+                                } else if (world[y-1][x-1] === 0 && world[y-1][x+1] === 0 && world[y-1][x+2] === 0){
+                                    //my shape is free to move
+                                    world[y-1][x-1] = world[y-2][x];
+                                    world[y-1][x+1] = world[y][x];
+                                    world[y-1][x+2] = world[y-3][x];
+                                    //I reset to 0 the cases that should now be empty
+                                    world[y-3][x] = 0;
+                                    world[y-2][x] = 0;
+                                    world[y][x] = 0;
+                                }
+                            }
+                        } else if (world[y-1][x] === 0){
+                            //The barShape (value=1) is HORIZONTAL
+                            if (count%3 === 0){
+                                world[y-1][x+1] = world[y][x];
+                                world[y+1][x+1] = world[y][x+2];
+                                world[y+2][x+1] = world[y][x+3];
+                                //I reset to 0 the cases that should now be empty
+                                world[y][x] = 0;
+                                world[y][x+2] = 0;
+                                world[y][x+3] = 0;
+                            } else if (count%3 !== 0){
+                                world[y-1][x+2] = world[y][x+1];
+                                world[y-2][x+2] = world[y][x];
+                                world[y+1][x+2] = world[y][x+3];
+                                //I reset to 0 the cases that should now be empty
+                                world[y][x+1] = 0;
+                                world[y][x+3] = 0;
+                                world[y][x] = 0;
+                            }                                
+                        }
+                    } else if (world[y][x] === 2 && turn === 0){
+                        //value 2 = L shape
+                        if (world[y][x+1] === 2 && world[y-1][x] === 2 && world[y-2][x] === 2){
+                            //The shape points to the top and will rotate clockwise
+                            if (world[y][x+2] !== 0 && world[y+1][x-1] === 0){
+                                //If the shape is blocked on the right side
+                                world[y][x-1] = world[y-1][x];
+                                world[y+1][x-1] = world[y-2][x];
+                                //I reset to 0 the cases that should now be empty
+                                world[y-1][x] = 0;
+                                world[y-2][x] = 0;
+                              } else {
+                                //If the shape can move freely
+                                world[y+1][x] = world[y][x+1];
+                                world[y][x+2] = world[y-2][x];
+                                //I reset to 0 the cases that should now be empty
+                                world[y-1][x] = 0;
+                                world[y-2][x] = 0;
+                            }
+                        } else if (world[y-1][x] === 2 && world[y-1][x+1] === 2 && world[y-1][x+2] === 2){
+                            //The shape points right and will rotate clockwise
+                            if (world[y-1][x-1] !== 0 && world[y+1][x] === 0){
+                                //The shape is blocked on the left side
+                                world[y][x+1] = world[y][x];
+                                world[y+1][x+1] = world[y-1][x+2];
+                                //I reset to 0 the cases that should now be empty
+                                world[y][x] = 0;
+                                world[y-1][x+2] = 0;
+                            } else if (world[y-1][x-1] === 0 && world[y+1][x] === 0){
+                                //The shape can move freely
+                                world[y-1][x-1] = world[y][x];
+                                world[y+1][x] = world[y-1][x+1];
+                                //I reset to 0 the cases that should now be empty
+                                world[y-1][x+1] = 0;
+                                world[y-1][x+2] = 0; 
+                            }                      
+                        } else if (world[y-1][x] === 2 && world[y-2][x] === 2 && world[y-2][x-1] === 2){
+                            //The shape points to the bottom and will rotate clockwise
+                            if (world[y-2][x-2] !== 0){
+                                world[y-2][x+1] = world[y][x];
+                                world[y-3][x+1] = world[y-1][x];
+                                //I reset to 0 the cases that should now be empty
+                                world[y][x] = 0;
+                                world[y-1][x] = 0;
+                            } else if (world[y-2][x-2] === 0){
+                                world[y-2][x-2] = world[y][x];
+                                world[y-3][x] = world[y-1][x];
+                                //I reset to 0 the cases that should now be empty
+                                world[y][x] = 0;
+                                world[y-1][x] = 0; 
+                            }
+                        } else if (world[y][x+1] === 2 && world[y][x+2] === 2 && world[y-1][x+2] === 2){
+                            //the shape points left and will rotate clockwise
+                            world[y][x+3] = world[y-1][x+2];
+                            world[y-2][x+2] = world[y][x+2];
+                            //I reset to 0 the cases that should now be empty
+                            world[y][x] = 0;
+                            world[y][x+1] = 0;
+                        }
+                    } else if (world[y][x] === 3 && turn === 0){
+                        // value 3 = Z shape
+                        if (world[y][x+1] === 3 && world[y-1][x] === 3 && world[y-1][x-1] === 3){
+                            //The shape looks like a Z and will rotate clockwise
+                            world[y+1][x] = world[y-1][x-1];
+                            world[y-1][x+1] = world[y-1][x];
+                            //I reset to 0 the cases that should now be empty
+                            world[y-1][x-1] = 0;
+                            world[y-1][x] = 0;
+                        } else if (world[y-1][x] === 3 && world[y-1][x+1] === 3 && world[y-2][x+1] === 3){
+                            //The shape looks like a N and will rotate clockwise
+                            if (world[y-1][x-1] === 0 && world[y][x+1] === 0){
+                                //If my shape can move freely
+                                world[y-1][x-1] = world[y-1][x+1];
+                                world[y][x+1] = world[y-2][x+1];
+                                //I reset to 0 the cases that should now be empty
+                                world[y-1][x+1] = 0;
+                                world[y-2][x+1] = 0;
+                            } else if (world[y-1][x-1] !== 0 && world[y][x+1] === 0 && world[y][x+2] === 0){
+                                //If my shape is blocked on the left side but is free on the right side
+                                world[y][x+1] = world[y][x];
+                                world[y][x+2] = world[y-2][x+1];
+                                //I reset to 0
+                                world[y][x] = 0;
+                                world[y-2][x+1] = 0;
+                            }
+                          
+                        }                      
+                    } else if (world[y][x] === 5 && turn === 0){
+                        //value 5 = S shape
+                        if (world[y][x+1] === 5 && world[y-1][x+1] === 5 && world[y-1][x+2] === 5){
+                            //The shape looks like a S
+                            if (world[y+1][x+1] === 0 && world[y-1][x] === 0){
+                                world[y+1][x+1] = world[y-1][x+2];
+                                world[y-1][x] = world[y-1][x+1];
+                                //I reset to 0
+                                world[y-1][x+2] = 0;
+                                world[y-1][x+1] = 0;
+                            } else if (world[y+1][x+1] !== 0 && world[y-1][x] === 0){
+                                world[y-2][x] = world[y-1][x+2];
+                                world[y-1][x] = world[y][x];
+                                //I reset to 0 the cases that should now be empty
+                                world[y-1][x+2] = 0;
+                                world[y][x] = 0;
+                            }                             
+                        } else if (world[y-1][x] === 5 && world[y-1][x-1] === 5 && world[y-2][x-1] === 5){
+                            // The shape looks like a reverse N
+                            if (world[y-1][x+1] === 0 && world[y][x-1] === 0){
+                                //If my shape can move freely
+                                world[y-1][x+1] = world[y-2][x-1];
+                                world[y][x-1] = world[y-1][x-1];
+                                //I reset to 0 the cases that should now be empty
+                                world[y-2][x-1] = 0;
+                                world[y-1][x-1] = 0;
+                            } else if (world[y-1][x+1] !== 0 && world[y][x-1] === 0 && world[y][x-2] === 0){
+                                //If my shape is blocked on the right side but free on the left side
+                                world[y][x-1] = world[y][x];
+                                world[y][x-2] = world[y-2][x-1];
+                                //I reset to 0
+                                world[y][x] = 0;
+                                world[y-2][x-1] = 0;
+                            }
+                         
+                        }
+                    } else if (world[y][x] === 6 && turn === 0){
+                        //value 6 = pyramid
+                        if (world[y][x+1] === 6 && world[y][x+2] === 6){
+                            //the pyramid points to the top and will rotate clock wise
+                            if (world[y+1][x+1] === 0){
+                                //shape can move freely
+                                world[y+1][x+1] = world[y][x];
+                                //I reset to 0
+                                world[y][x] = 0;
+                            }
+                        } else if (world[y-1][x] === 6 && world[y-2][x] === 6 && world[y-1][x+1] === 6){
+                            //the shape points right and will rotate clockwise
+                            if (world[y-1][x-1] === 0){
+                                //can move freely
+                                world[y-1][x-1] = world[y-2][x];
+                                //I reset to 0
+                                world[y-2][x] = 0;
+                            } else if (world[y-1][x-1] !== 0){
+                                //shape blocked on the left side
+                                world[y-1][x+2] = world[y][x];
+                                world[y-2][x+1] = world[y-2][x];
+                                //I reset to 0;
+                                world[y][x] = 0;
+                                world[y-2][x] = 0;
+                            }
+                        } else if (world[y-1][x-1] === 6 && world[y-1][x] === 6 && world[y-1][x+1] === 6){
+                            //The shape points to the bottom and will rotate clockwise
+                            if (world[y-2][x] === 0){
+                                world[y-2][x] = world[y-1][x+1];
+                                //I reset
+                                world[y-1][x+1] = 0;
+                            }
+                        } else if (world[y-1][x-1] === 6 && world[y-1][x] === 6 && world[y-2][x] === 6){
+                            //The shape points left
+                            if (world[y-1][x+1] === 0){
+                                world[y-1][x+1] = world[y][x];
+                                world[y][x] = 0;
+                            } else if (world[y-1][x+1] !== 0){
+                                world[y-1][x-2] = world[y][x];
+                                world[y-2][x-1] = world[y-2][x];
+                                //I reset
+                                world[y][x] = 0;
+                                world[y-2][x] = 0;
+                            }
+                        }
+                    }
+                    turn++;
+                }
+            }
+        }
+        drawWorld();
+    }
+}
+function freeze(){
+    for(var y=world.length-1; y>=0; y--) {
+        for(var x=0; x<world[y].length; x++) {
+            if(world[y][x] > 0 && world[y][x] < 10 ){
+                world[y][x] = world[y][x] + 10;
+            }
+        }
+    }
+    checkLines();
+    var ran = Math.floor(Math.random()*6);
+    if(ran === 0 && world[0][3] === 0 && world[1][3] === 0 && world[2][3] === 0 && world[3][3] === 0){
+        //bar shape
+        world[0][3] = 1;
+        world[1][3] = 1;
+        world[2][3] = 1;
+        world[3][3] = 1; 
+    } else if (ran === 1 && world[0][3] === 0 && world[1][3] === 0 && world[2][3] === 0 && world[2][4] === 0){
+        //L shape
+        world[0][3] = 2;
+        world[1][3] = 2;
+        world[2][3] = 2;
+        world[2][4] = 2;
+    } else if (ran === 2 && world[0][2] === 0 && world[0][3] === 0 && world[1][3] === 0 && world[1][4] === 0){
+        //Z shape
+        world[0][2] = 3;
+        world[0][3] = 3;
+        world[1][3] = 3;
+        world[1][4] = 3;
+    } else if (ran === 3 && world[0][3] === 0 && world[0][4] === 0 && world[1][3] === 0 && world[1][4] === 0){
+        //cube
+        world[0][3] = 4;
+        world[0][4] = 4;
+        world[1][3] = 4;
+        world[1][4] = 4;
+    } else if (ran === 4 && world[0][3] === 0 && world[0][4] === 0 && world[1][2] === 0 && world[1][3] == 0){
+        //S shape
+        world[0][3] = 5;
+        world[0][4] = 5;
+        world[1][2] = 5;
+        world[1][3] = 5;
+    } else if (ran === 5 && world[0][3] === 0 && world[1][2] === 0 && world[1][3] === 0 && world[1][4] === 0) {
+        //Pyramid shape
+        world[0][3] = 6;
+        world[1][2] = 6;
+        world[1][3] = 6;
+        world[1][4] = 6;
+        } else {
+        alert("Fin du jeu");
+    } 
+}
+
+function checkLines(){
+    for(var y=world.length-1; y>=0; y--) {
+        fullLine = true;
+        for(var x=0; x<world[y].length; x++) {
+            if(world[y][x] < 10) {
+                fullLine = false;
+            }
+        }
+        if (fullLine) {
+            world.splice(y, 1);
+            world.splice(0, 0, [0,0,0,0,0,0,0,0])
+            score++;
+            document.getElementById('score').innerHTML = score;
+            y++;
+        }
+    }
+}
+document.onkeydown = function(e) {
+    console.log(e)
+    if (e.keyCode === 37){
+        moveShapesLeft(); 
+    } else if (e.keyCode === 39){
+        moveShapesRight();
+    } else if (e.keyCode === 40){
+        moveShapesDown();
+    } else if (e.keyCode === 38){
+        rotateShapeRight();
+        if (count === 3){
+            count = 0;
+        };
+        count++;
+    }
+}
+function gameLoop(){
+    moveShapesDown();
+    drawWorld();
+    setTimeout(gameLoop, 1000);
+}
+
+var score = 0;
+var count = 0;
+//The variable 'count' is used for rotation of bar shape
+document.getElementById('score').innerHTML = "0";
+drawWorld();
+gameLoop();
+
+</script>

@@ -13,30 +13,30 @@ body {
     overflow: hidden;
 }
 
-@keyframes slidein {
-  from {
-    transform: translate(0px); 
-  }
-  25%{
-    transform: translate(-700px); 
-  }
-  50%{
-    transform: translate(-700px, 1000px); 
-  }
-  75%{
-    transform: translate(-700px); 
-  }
-  to {
-    transform: translate(0px); 
-  }
+@keyframes fallDown {
+    from {
+        transform: translateY(0) rotate(0deg);
+    }
+    25%{
+        transform: translateY(500px) rotate(90deg); 
+    }
+    50%{
+        transform: translateY(1000px) rotate(180deg);
+    }
+    75%{
+        transform: translateY(2000px) rotate(270deg);
+    }
+    to {
+        transform: translateY(2000px) rotate(360deg);
+    }
 }
+          
 
 h1{
     text-align: center;
     font-size: 100px;
     position: relative;
     top: 60px;
-    animation: slidein 30s infinite;
 }
 .empty {
     width: 50px;
@@ -80,7 +80,6 @@ h1{
     height: 50px;
     background-color: pink;
     outline: 2px solid black;
-    /* background-image: url('tetris-piece.png'); */
     display: inline-block;
 }
 
@@ -107,7 +106,7 @@ h1{
     font-size: 40px;
     text-align: center;
 }
-#score{
+#lines{
     width: 160px;
     height: 40px;   
     position: relative;
@@ -116,7 +115,7 @@ h1{
     border-radius: 35px;
 }
 
-#score-title {
+#lines-title {
     font-size: 20px;
     text-align: center;
     border-radius: 35px;
@@ -131,16 +130,32 @@ h1{
     text-align: center;
     font-size: 40px;
 }
+
+#ruins{
+    display: inline-block;
+    position: relative;
+    border-color: black;
+    width: 500px;
+    top: -1250px;
+    left: 150px;
+    animation: fallDown 9s infinite linear;
+}
 </style>
 
 
 <!-- HTML Code -->
+<!DOCTYPE html>
 <body>
     <h1>TETRIS</h1>
     <div id='world'></div>
+    <div id='ruins'></div>
     <div id='details'>
-        <div id='score-title'>LINES
+        <div id='score-title'>SCORE
             <div id='score'>
+            </div>
+        </div>
+        <div id='lines-title'>LINES
+            <div id='lines'>
             </div>
         </div>
             <div id='level-title'>LEVEL
@@ -150,13 +165,13 @@ h1{
     </div>
     
 </body>
-
+</html>
 
 <!-- JavaScript Code: -->
 <script>
 var world = [
-    [0,0,0,4,4,0,0,0,0,0],
-    [0,0,0,4,4,0,0,0,0,0],
+    [0,0,0,0,4,4,0,0,0,0],
+    [0,0,0,0,4,4,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
@@ -175,6 +190,11 @@ var world = [
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0]
+];
+
+var ruins = [
+    [0,0,0,0,4,4,0,0,0,0],
+    [0,0,0,0,4,4,0,0,0,0]
 ];
 
 function drawWorld() {
@@ -198,6 +218,30 @@ function drawWorld() {
             }
         }
         document.getElementById('world').innerHTML += "<br>";
+    }
+}
+
+function drawRuins() {
+    document.getElementById('ruins').innerHTML = "";
+    for(var y=0; y<ruins.length; y++) {
+        for(var x=0; x<ruins[y].length; x++) {
+            if(ruins[y][x]=== 0){
+                document.getElementById('ruins').innerHTML += "<div class='empty'></div>";
+            } else if(ruins[y][x]=== 1){
+                document.getElementById('ruins').innerHTML += "<div class='barShape'></div>";
+            } else if(ruins[y][x]=== 2){
+                document.getElementById('ruins').innerHTML += "<div class='lShape'></div>";
+            } else if(ruins[y][x]=== 3){
+                document.getElementById('ruins').innerHTML += "<div class='zShape'></div>";
+            } else if(ruins[y][x]=== 4){
+                document.getElementById('ruins').innerHTML += "<div class='squareShape'></div>";
+            } else if(ruins[y][x]=== 5){
+                document.getElementById('ruins').innerHTML += "<div class='reverseZshape'></div>";
+            } else if(ruins[y][x]=== 6){
+                document.getElementById('ruins').innerHTML += "<div class='pyramid'></div>";
+            }
+        }
+        document.getElementById('ruins').innerHTML += "<br>";
     }
 }
 function moveShapesDown() {
@@ -610,9 +654,9 @@ function checkLines(){
         if (fullLine) {
             world.splice(y, 1);
             world.splice(0, 0, [0,0,0,0,0,0,0,0,0,0])
-            score++;
+            lines++;
             score_count ++;
-            document.getElementById('score').innerHTML = score;
+            document.getElementById('lines').innerHTML = lines;
             y++;
         }
     }
@@ -651,9 +695,60 @@ function gameLoop(){
     setTimeout(gameLoop, game_speed);
 }
 
-//initial level, score and game speed
+function ruinsLoop(){
+    var raandom = Math.floor(Math.random()*6);
+    if(raandom === 0){
+        //bar shape
+        ruins = [
+            [0,0,0,0,1,0,0,0,0,0],
+            [0,0,0,0,1,0,0,0,0,0],
+            [0,0,0,0,1,0,0,0,0,0],
+            [0,0,0,0,1,0,0,0,0,0]
+            ];
+    } else if (raandom === 1){
+        //L shape
+        ruins = [
+            [0,0,0,0,2,0,0,0,0,0],
+            [0,0,0,0,2,0,0,0,0,0],
+            [0,0,0,0,2,2,0,0,0,0]
+           
+            ];
+    } else if (raandom === 2){
+        //Z shape
+        ruins = [
+            [0,0,0,3,3,0,0,0,0,0],
+            [0,0,0,0,3,3,0,0,0,0]
+         
+            ];
+    } else if (raandom === 3){
+        //cube
+        ruins = [
+            [0,0,0,0,4,4,0,0,0,0],
+            [0,0,0,0,4,4,0,0,0,0]
+          
+            ];
+    } else if (raandom === 4){
+        //S shape
+        ruins = [
+            [0,0,0,0,5,5,0,0,0,0],
+            [0,0,0,5,5,0,0,0,0,0]
+          
+            ];
+    } else if (raandom === 5) {
+        //Pyramid shape
+        ruins = [
+            [0,0,0,0,6,0,0,0,0,0],
+            [0,0,0,6,6,6,0,0,0,0]
+          
+            ];
+    }
+    drawRuins();
+    setTimeout(ruinsLoop, 9000);
+}
+
+//initial level, lines and game speed
 var level = 1;
-var score = 0;
+var lines = 0;
 var game_speed = 1000;
 
 //score_count keeps the count to know how many lines must be destroyed before next level.The variable is reset at each levelup.
@@ -662,9 +757,11 @@ var score_count = 0;
 //The variable 'count' is used for rotation of bar shape
 var count = 0;
 
-document.getElementById('score').innerHTML = "0";
+document.getElementById('lines').innerHTML = "0";
 document.getElementById('level').innerHTML = "1";
 drawWorld();
-gameLoop();
+drawRuins();
 
+gameLoop();
+ruinsLoop();
 </script>

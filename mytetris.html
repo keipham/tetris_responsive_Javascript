@@ -1,8 +1,8 @@
 <!-- CSS Code -->
 <style>
-* {
+/** {
     outline: 1px dotted red; 
-}
+}*/
 
 
 body {
@@ -30,15 +30,39 @@ body {
         transform: translateY(2000px) rotate(360deg);
     }
 }
-          
+
+@keyframes title_blink {
+    from {
+        color: orange;
+    }
+    25%{
+        color: green;
+    }
+    50%{
+        color: blue;
+    }
+    75%{
+        color: pink;
+    }
+    to {
+        color: red;
+    }
+}        
 
 h1{
     text-align: center;
     font-size: 100px;
     position: relative;
     top: 60px;
+    animation: title_blink 50s infinite;
 }
 .empty {
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    outline: 1px dotted blue;
+}
+.invisibleEmpty {
     width: 50px;
     height: 50px;
     display: inline-block;
@@ -88,12 +112,11 @@ h1{
     height: 50px;
     background-color:violet;
     outline: 2px solid black;
-    /* background-image: url('tetris-piece.png'); */
     display: inline-block;
 }
 
 #world{
-    text-align: center;
+    text-align: center; 
 }
 
 #details {
@@ -101,26 +124,48 @@ h1{
     position: relative;
     width: 60px;
     height: 40px;
-    bottom: 700px;
-    left: 1500px;
+    bottom: 900px;
+    right: -1500px;
     font-size: 40px;
     text-align: center;
+    /*padding: 30px;*/
 }
-#lines{
+#lines {
     width: 160px;
     height: 40px;   
     position: relative;
     text-align: center;
     top: 10px;
     border-radius: 35px;
+    outline: 4px dotted blue;
 }
 
+#score{
+    width: 160px;
+    height: 40px;   
+    position: relative;
+    text-align: center;
+    top: 10px;
+    border-radius: 35px;
+    outline: 4px dotted blue;
+}
+#score-title {
+    font-size: 20px;
+    text-align: center;
+    border-radius: 35px;
+    font-size: 40px;
+    width: 160px;
+    margin-top: 30px;
+    outline: 4px dotted blue;
+}
 #lines-title {
     font-size: 20px;
     text-align: center;
     border-radius: 35px;
     font-size: 40px;
     width: 160px;
+    margin-top: 30px;
+    outline: 4px dotted blue;
 }
 
 #level-title{
@@ -129,8 +174,17 @@ h1{
     width: 160px;
     text-align: center;
     font-size: 40px;
+    outline: 4px dotted blue;
 }
-
+#level{
+    width: 160px;
+    height: 40px;   
+    position: relative;
+    text-align: center;
+    top: 10px;
+    border-radius: 35px;
+    outline: 4px dotted blue;
+}
 #ruins{
     display: inline-block;
     position: relative;
@@ -226,7 +280,7 @@ function drawRuins() {
     for(var y=0; y<ruins.length; y++) {
         for(var x=0; x<ruins[y].length; x++) {
             if(ruins[y][x]=== 0){
-                document.getElementById('ruins').innerHTML += "<div class='empty'></div>";
+                document.getElementById('ruins').innerHTML += "<div class='invisibleEmpty'></div>";
             } else if(ruins[y][x]=== 1){
                 document.getElementById('ruins').innerHTML += "<div class='barShape'></div>";
             } else if(ruins[y][x]=== 2){
@@ -644,6 +698,7 @@ function freeze(){
 }
 
 function checkLines(){
+    var nbFullLine = 0;
     for(var y=world.length-1; y>=0; y--) {
         fullLine = true;
         for(var x=0; x<world[y].length; x++) {
@@ -653,22 +708,41 @@ function checkLines(){
         }
         if (fullLine) {
             world.splice(y, 1);
-            world.splice(0, 0, [0,0,0,0,0,0,0,0,0,0])
+            world.splice(0, 0, [0,0,0,0,0,0,0,0,0,0]);
+            //nbFullLine keeps track of the number of line destroyed at the same time to determine the appropriate score
+            nbFullLine++;
+            //line_count allows to track number of line remaining before next level
+            line_count ++;
+            //lines keeps track of the number of lines destroyed
             lines++;
-            score_count ++;
             document.getElementById('lines').innerHTML = lines;
-            y++;
         }
+    }
+    if (nbFullLine === 1){
+        score = score + 40*(level+1);
+        document.getElementById('score').innerHTML = score;
+    } else if (nbFullLine === 2){       
+        score = score + 100*(level+1);
+        document.getElementById('score').innerHTML = score;
+    } else if (nbFullLine === 2){       
+        score = score + 100*(level+1);
+        document.getElementById('score').innerHTML = score;
+    } else if (nbFullLine === 3){       
+        score = score + 300*(level+1);
+        document.getElementById('score').innerHTML = score;
+    } else if (nbFullLine === 4){       
+        score = score + 1200*(level+1);
+        document.getElementById('score').innerHTML = score;
     }
 }
 
 function levelup(){
-    if (score_count>=(5*level)){
+    if (line_count != 0 && line_count>=(5*level)){
         level++;
         document.getElementById('level').innerHTML = level;
-        score_count = 0;
+        line_count = 0;
     }
-    if (score_count >= (2*level)){
+    if (line_count >= (2*level)){
         game_speed = 1000-250;
     }
 }
@@ -747,18 +821,20 @@ function ruinsLoop(){
 }
 
 //initial level, lines and game speed
-var level = 1;
+var level = 0;
 var lines = 0;
+var score = 0;
 var game_speed = 1000;
 
-//score_count keeps the count to know how many lines must be destroyed before next level.The variable is reset at each levelup.
-var score_count = 0;
+//line_count keeps the count to know how many lines must be destroyed before next level.The variable is reset at each levelup.
+var line_count = 0;
 
 //The variable 'count' is used for rotation of bar shape
 var count = 0;
 
 document.getElementById('lines').innerHTML = "0";
-document.getElementById('level').innerHTML = "1";
+document.getElementById('level').innerHTML = "0";
+document.getElementById('score').innerHTML = "0";
 drawWorld();
 drawRuins();
 

@@ -776,9 +776,13 @@ function levelup(){
         level++;
         document.getElementById('level').innerHTML = level;
         line_count = 0;
-    }
-    if (line_count >= (2*level)){
-        game_speed = 1000-250;
+        if (game_speed <= 250 && game_speed >= 50){
+            game_speed = game_speed-20;
+        } else if (game_speed <= 50){
+            //no change of speed
+        } else {
+            game_speed = game_speed-150;
+        }
     }
 }
 document.onkeydown = function(e) {

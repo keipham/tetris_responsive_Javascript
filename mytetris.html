@@ -56,6 +56,7 @@ h1{
     top: 60px;
     animation: title_blink 50s infinite;
 }
+
 .empty {
     width: 50px;
     height: 50px;
@@ -130,16 +131,17 @@ h1{
     text-align: center;
     /*padding: 30px;*/
 }
-#lines {
-    width: 160px;
+#lines, #level, #score {
+    width: 500px;
     height: 40px;   
     position: relative;
     text-align: center;
     top: 10px;
-    border-radius: 35px;
-    outline: 4px dotted blue;
+    border-radius: 25px;
+    /*outline: 4px dotted blue;*/
+    background-color: white;
 }
-
+/*
 #score{
     width: 160px;
     height: 40px;   
@@ -148,8 +150,8 @@ h1{
     top: 10px;
     border-radius: 35px;
     outline: 4px dotted blue;
-}
-#score-title {
+}*/
+/*#score-title {
     font-size: 20px;
     text-align: center;
     border-radius: 35px;
@@ -157,17 +159,26 @@ h1{
     width: 160px;
     margin-top: 30px;
     outline: 4px dotted blue;
-}
-#lines-title {
+}*/
+#lines-title, #score-title, #level-title, #best-title {
     font-size: 20px;
     text-align: center;
     border-radius: 35px;
     font-size: 40px;
-    width: 160px;
+    width: 500px;
     margin-top: 30px;
     outline: 4px dotted blue;
 }
-
+#speed-title {
+    font-size: 20px;
+    text-align: center;
+    border-radius: 35px;
+    font-size: 40px;
+    width: 500px;
+    margin-top: 30px;
+    outline: 4px dotted red;
+}
+/*
 #level-title{
     margin-top: 30px;
     font-size: 20px;
@@ -184,6 +195,14 @@ h1{
     top: 10px;
     border-radius: 35px;
     outline: 4px dotted blue;
+}*/
+select{
+    position: relative;
+    margin-top: 10px;
+    font-size: 20px;
+    width: 160px;
+    text-align: center;
+    font-size: 25px;
 }
 #ruins{
     display: inline-block;
@@ -204,6 +223,10 @@ h1{
     <div id='world'></div>
     <div id='ruins'></div>
     <div id='details'>
+        <div id='best-title'>BEST SCORE
+            <div id='best'>
+            </div>
+        </div>
         <div id='score-title'>SCORE
             <div id='score'>
             </div>
@@ -212,10 +235,16 @@ h1{
             <div id='lines'>
             </div>
         </div>
-            <div id='level-title'>LEVEL
-                <div id='level'>
-                </div>
+        <div id='level-title'>LEVEL
+            <div id='level'>
             </div>
+        </div>
+        <div id='speed-title'>SPEED
+            <select>
+                <option>NORMAL</option>
+                <option>SPEED UP</option>
+            </select>
+        </div>
     </div>
     
 </body>
@@ -692,7 +721,7 @@ function freeze(){
         world[1][4] = 6;
         world[1][5] = 6;
         world[1][6] = 6;
-        } else {
+    } else {
         alert("Fin du jeu");
     } 
 }
@@ -724,6 +753,7 @@ function checkLines(){
     } else if (nbFullLine === 2){       
         score = score + 100*(level+1);
         document.getElementById('score').innerHTML = score;
+        
     } else if (nbFullLine === 2){       
         score = score + 100*(level+1);
         document.getElementById('score').innerHTML = score;
@@ -734,6 +764,11 @@ function checkLines(){
         score = score + 1200*(level+1);
         document.getElementById('score').innerHTML = score;
     }
+        if (score > localStorage.getItem('best-score')){
+            localStorage.setItem('best-score', score);
+        }
+        document.getElementById('best').innerHTML = localStorage.getItem('best-score');
+    
 }
 
 function levelup(){
@@ -747,7 +782,6 @@ function levelup(){
     }
 }
 document.onkeydown = function(e) {
-    console.log(e)
     if (e.keyCode === 37){
         moveShapesLeft(); 
     } else if (e.keyCode === 39){
@@ -832,12 +866,17 @@ var line_count = 0;
 //The variable 'count' is used for rotation of bar shape
 var count = 0;
 
+if (localStorage.getItem('best-score') !== null){
+    document.getElementById('best').innerHTML = localStorage.getItem('best-score');
+} else {
+    document.getElementById('best').innerHTML = "0";
+}
+     
 document.getElementById('lines').innerHTML = "0";
 document.getElementById('level').innerHTML = "0";
 document.getElementById('score').innerHTML = "0";
 drawWorld();
 drawRuins();
-
 gameLoop();
 ruinsLoop();
 </script>

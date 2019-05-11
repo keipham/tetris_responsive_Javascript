@@ -13,6 +13,14 @@ body {
     overflow: hidden;
 }
 
+body.active {
+    background-image: none;
+    background-color: #332E2E; 
+}
+
+.title.active{
+    color:#f4f4f4;
+}
 @keyframes fallDown {
     from {
         transform: translateY(0) rotate(0deg);
@@ -57,63 +65,43 @@ h1{
     animation: title_blink 50s infinite;
 }
 
-.empty {
+.cell {
     width: 50px;
     height: 50px;
     display: inline-block;
+}
+.empty {
     outline: 1px dotted blue;
 }
-.invisibleEmpty {
-    width: 50px;
-    height: 50px;
-    display: inline-block;
-}
+
 .squareShape {
-    width: 50px;
-    height: 50px;
     background-color: orange;
     outline: 2px solid black;
-    display: inline-block;
 }
 
 .barShape {
-    width: 50px;
-    height: 50px;
     background-color: green;
     outline: 2px solid black;
-    display: inline-block;
 }
 
 .zShape {
-    width: 50px;
-    height: 50px;
     background-color: blue;
     outline: 2px solid black;
-    display: inline-block;
 }
 
 .reverseZshape {
-    width: 50px;
-    height: 50px;
     background-color: red;
     outline: 2px solid black;
-    display: inline-block;
 }
 
 .lShape {
-    width: 50px;
-    height: 50px;
     background-color: pink;
     outline: 2px solid black;
-    display: inline-block;
 }
 
 .pyramid {
-    width: 50px;
-    height: 50px;
     background-color:violet;
     outline: 2px solid black;
-    display: inline-block;
 }
 
 #world{
@@ -122,15 +110,14 @@ h1{
 
 #details {
     flex-direction: column;
-    position: relative;
-    bottom: 900px;
-    right: -67%;
+    position: absolute;
     font-size: 40px;
     text-align: center;
+    top: 25%;
+    left: 65%;
+    width: 21%;
 }
-#lines, #level, #score {
-    width: auto;
-    height: 40px;   
+#lines, #level, #score {  
     position: relative;
     text-align: center;
     top: 10px;
@@ -138,23 +125,26 @@ h1{
     background-color: white;
 }
 
-#lines-title, #score-title, #level-title, #best-title {
-    font-size: 20px;
+#lines.active, #level.active, #score.active {  
+    position: relative;
     text-align: center;
-    border-radius: 35px;
-    font-size: 40px;
-    width: 20%;
-    margin-top: 1%;
-    outline: 4px dotted blue;
+    top: 10px;
+    border-radius: 25px;
+    background-color: white;
+    color: #000;
 }
-#speed-title {
+
+.title {
     font-size: 20px;
     text-align: center;
-    border-radius: 35px;
     font-size: 40px;
-    width: 20%;
-    margin-top: 1%;
-    outline: 4px dotted red;
+    margin-top: 9%;
+    /*outline: 4px dotted blue;*/
+}
+
+.best-title{
+    outline: 4px solid gold;
+    color: gold;
 }
 
 select{
@@ -174,38 +164,137 @@ select{
     left: 150px;
     animation: fallDown 9s infinite linear;
 }
+/* The switch - the box around the slider */
+.switch {
+  position: absolute;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  right:4%;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  /*-webkit-transition: .4s;*/
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  /*-webkit-transform: translateX(26px);*/
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+@media (max-width: 1700px) {
+  #ruins {
+    display:none;
+  }
+  #details {
+    flex-direction: column;
+    position: absolute;
+    font-size: 20px;
+    text-align: center;
+    top: 25%;
+    left: 65%;
+    width: 21%;
+  }
+  .title {
+    font-size: 20px;
+    text-align: center;
+    margin-top: 9%;
+    }
+  .cell {
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    }
+}
+@media (max-width: 700px) {
+    #details{
+        display: none;
+    }
+    h1{
+        text-align: center;
+        font-size: 50px;
+        position: relative;
+        top: 20px;
+        animation: title_blink 50s infinite;
+    }
+}
 </style>
 
 
 <!-- HTML Code -->
 <!DOCTYPE html>
-<body>
+<body id="body">
     <h1>TETRIS</h1>
     <div id='world'></div>
     <div id='ruins'></div>
+    
     <div id='details'>
-        <div id='best-title'>BEST SCORE
+        <label class="switch">
+            <input type="checkbox" onclick="night(this)">
+            <span class="slider round"></span>
+        </label>
+        <div class='title best-title'>BEST SCORE
             <div id='best'>
             </div>
         </div>
-        <div id='score-title'>SCORE
+        <div class='title'>SCORE
             <div id='score'>
             </div>
         </div>
-        <div id='lines-title'>LINES
+        <div class='title'>LINES
             <div id='lines'>
             </div>
         </div>
-        <div id='level-title'>LEVEL
+        <div class='title'>LEVEL
             <div id='level'>
             </div>
         </div>
-        <div id='speed-title'>SPEED
-            <select>
-                <option>NORMAL</option>
-                <option>SPEED UP</option>
-            </select>
-        </div>
+        
     </div>
     
 </body>
@@ -246,19 +335,19 @@ function drawWorld() {
     for(var y=0; y<world.length; y++) {
         for(var x=0; x<world[y].length; x++) {
             if(world[y][x]=== 0){
-                document.getElementById('world').innerHTML += "<div class='empty'></div>";
+                document.getElementById('world').innerHTML += "<div class='cell empty'></div>";
             } else if(world[y][x]=== 1 || world[y][x]=== 11){
-                document.getElementById('world').innerHTML += "<div class='barShape'></div>";
+                document.getElementById('world').innerHTML += "<div class='cell barShape'></div>";
             } else if(world[y][x]=== 2 || world[y][x]=== 12){
-                document.getElementById('world').innerHTML += "<div class='lShape'></div>";
+                document.getElementById('world').innerHTML += "<div class='cell lShape'></div>";
             } else if(world[y][x]=== 3 || world[y][x]=== 13){
-                document.getElementById('world').innerHTML += "<div class='zShape'></div>";
+                document.getElementById('world').innerHTML += "<div class='cell zShape'></div>";
             } else if(world[y][x]=== 4 || world[y][x]=== 14){
-                document.getElementById('world').innerHTML += "<div class='squareShape'></div>";
+                document.getElementById('world').innerHTML += "<div class='cell squareShape'></div>";
             } else if(world[y][x]=== 5 || world[y][x]=== 15){
-                document.getElementById('world').innerHTML += "<div class='reverseZshape'></div>";
+                document.getElementById('world').innerHTML += "<div class='cell reverseZshape'></div>";
             } else if(world[y][x]=== 6 || world[y][x]=== 16){
-                document.getElementById('world').innerHTML += "<div class='pyramid'></div>";
+                document.getElementById('world').innerHTML += "<div class='cell pyramid'></div>";
             }
         }
         document.getElementById('world').innerHTML += "<br>";
@@ -270,19 +359,19 @@ function drawRuins() {
     for(var y=0; y<ruins.length; y++) {
         for(var x=0; x<ruins[y].length; x++) {
             if(ruins[y][x]=== 0){
-                document.getElementById('ruins').innerHTML += "<div class='invisibleEmpty'></div>";
+                document.getElementById('ruins').innerHTML += "<div class='cell'></div>";
             } else if(ruins[y][x]=== 1){
-                document.getElementById('ruins').innerHTML += "<div class='barShape'></div>";
+                document.getElementById('ruins').innerHTML += "<div class='cell barShape'></div>";
             } else if(ruins[y][x]=== 2){
-                document.getElementById('ruins').innerHTML += "<div class='lShape'></div>";
+                document.getElementById('ruins').innerHTML += "<div class='cell lShape'></div>";
             } else if(ruins[y][x]=== 3){
-                document.getElementById('ruins').innerHTML += "<div class='zShape'></div>";
+                document.getElementById('ruins').innerHTML += "<div class='cell zShape'></div>";
             } else if(ruins[y][x]=== 4){
-                document.getElementById('ruins').innerHTML += "<div class='squareShape'></div>";
+                document.getElementById('ruins').innerHTML += "<div class='cell squareShape'></div>";
             } else if(ruins[y][x]=== 5){
-                document.getElementById('ruins').innerHTML += "<div class='reverseZshape'></div>";
+                document.getElementById('ruins').innerHTML += "<div class='cell reverseZshape'></div>";
             } else if(ruins[y][x]=== 6){
-                document.getElementById('ruins').innerHTML += "<div class='pyramid'></div>";
+                document.getElementById('ruins').innerHTML += "<div class='cell pyramid'></div>";
             }
         }
         document.getElementById('ruins').innerHTML += "<br>";
@@ -818,7 +907,15 @@ function ruinsLoop(){
     drawRuins();
     setTimeout(ruinsLoop, 9000);
 }
-
+function night(){
+      document.getElementById('body').classList.toggle('active');
+      document.getElementsByClassName('title')[1].classList.toggle('active');
+      document.getElementsByClassName('title')[2].classList.toggle('active');
+      document.getElementsByClassName('title')[3].classList.toggle('active');
+      document.getElementById('score').classList.toggle('active');
+      document.getElementById('lines').classList.toggle('active');
+      document.getElementById('level').classList.toggle('active');
+    }
 //initial level, lines and game speed
 var level = 0;
 var lines = 0;

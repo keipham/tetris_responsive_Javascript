@@ -17,7 +17,65 @@ body.active {
     background-image: none;
     background-color: #332E2E; 
 }
+.open-slide{
+  float:left;
+  display:block;
+  color:#f2f2f2;
+  text-align:center;
+  padding:14px 16px;
+  text-decoration:none;
+  font-size:17px;
+  transition:0.3s;
+  position: absolute;
+  top: 4%;
+  left: 0%;
+}
 
+.side-nav{
+  height:100%;
+  position:absolute;
+  z-index:1;
+  top:0;
+  left:0;
+  background-color:#111;
+  opacity:0.9;
+  overflow-x:hidden;
+  padding-top:60px;
+  transition:0.5s;
+}
+.side-nav a{
+  padding:10px 10px 10px 30px;
+  border-bottom: 1px solid rgba(100,100,100,0.3);
+  text-decoration:none;
+  font-size:22px;
+  color:#ccc;
+  display:block;
+  transition:0.3s;
+}
+
+.side-nav a:hover{
+  color:#fff;
+  font-size: 24px;
+}
+
+.side-nav .btn-close{
+  position:absolute;
+  top:0;
+  right:22px;
+  font-size:36px;
+  margin-left:50px;
+}
+#main.active svg path{
+  stroke: #f4f4f4;
+}
+#main{
+  transition:margin-left 0.5s;
+  padding:20px;
+  overflow:hidden;
+  width:100%;
+  display: none;
+  margin-left: 0px;
+}
 .title.active{
     color:#f4f4f4;
 }
@@ -135,7 +193,7 @@ h1{
 }
 
 
-#details {
+.details {
     flex-direction: column;
     position: absolute;
     font-size: 40px;
@@ -144,17 +202,17 @@ h1{
     left: 65%;
     width: 21%;
 }
-#mode{
+.mode{
     font-size: 17px;
     position: relative;
     left: 20%;
     top: 1%;
 }
 
-#mode.active{
+.mode.active{
     color: #f4f4f4;
 }
-#lines, #level, #score {  
+.lines, .level, .score {  
     position: relative;
     text-align: center;
     top: 10px;
@@ -162,7 +220,7 @@ h1{
     background-color: white;
 }
 
-#lines.active, #level.active, #score.active {  
+.lines.active, .level.active, .score.active {  
     position: relative;
     text-align: center;
     top: 10px;
@@ -172,7 +230,7 @@ h1{
 }
 
 .title {
-    font-size: 20px;
+    /*font-size: 20px;*/
     text-align: center;
     font-size: 40px;
     margin-top: 9%;
@@ -196,9 +254,8 @@ select{
     display: inline-block;
     position: relative;
     border-color: black;
-    width: 500px;
     top: -1250px;
-    left: 150px;
+    left: 9%;
     animation: fallDown 9s infinite linear;
 }
 /* The switch - the box around the slider */
@@ -265,36 +322,50 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
-@media (max-width: 1700px) {
-  #ruins {
-    display:none;
-  }
-  #details {
-    flex-direction: column;
-    position: absolute;
-    font-size: 20px;
-    text-align: center;
-    top: 25%;
-    left: 65%;
-    width: 21%;
-  }
+@media (max-width: 1900px) {
   .title {
-    font-size: 20px;
+    font-size: 30px;
     text-align: center;
     margin-top: 9%;
     }
   .cell {
-    width: 25px;
-    height: 25px;
+    width: 40px;
+    height: 40px;
     display: inline-block;
     }
     #mode{
         display: none;
     }
 }
-@media (max-width: 900px) {
-    #details{
+
+@media (max-width: 1500px) {
+    .title {
+    font-size: 20px;
+    text-align: center;
+    margin-top: 9%;
+    }
+  .cell {
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+    }
+    #mode{
         display: none;
+    }
+}
+@media (max-width: 1250px) {
+    #ruins{
+        display:none;
+    }
+    #body .details{
+        display: none;
+    }
+    #main{
+        transition:margin-left 0.5s;
+        padding:20px;
+        overflow:hidden;
+        width:100%;
+        display: inline-block;
     }
     h1{
         text-align: center;
@@ -302,6 +373,37 @@ input:checked + .slider:before {
         position: relative;
         top: 20px;
         animation: title_blink 50s infinite;
+    }
+    
+    #side-menu .details{
+        display: inline-block;
+        flex-direction: column;
+        position: absolute;
+        font-size: 20px;
+        text-align: center;
+        top: 10%;
+        left: 20%;
+        width: auto;
+        padding-top: 20%;
+    }
+    .title {
+        font-size: 25px;
+        text-align: center;
+        margin-top: 9%;
+        color: #f4f4f4;
+    }
+    .best-title {
+        outline: 4px solid gold;
+        color: gold;
+    }
+    .lines, .level, .score {  
+        color: black;
+    }
+    
+}
+@media (max-width: 750px) {
+    .title {
+        font-size: 25px;
     }
 }
 </style>
@@ -313,30 +415,70 @@ input:checked + .slider:before {
     <h1>TETRIS</h1>
     <div id='world'></div>
     <div id='ruins'></div>
-    <div id='details'>
+    <div id="side-menu" class="side-nav" style="width: 0px">
+        <ul>
+            <li><a href="#" class="btn-close" onclick="closeSlideMenu()">&times;</a></li>
+        </ul>
+        <div class='details'>
+            <label class="switch">
+                <span class='mode'><!--switch light--></span>
+                <input type="checkbox" onclick="night(this)">
+                <span class="slider round"></span>
+            </label>
+            <div class='title best-title'>BEST SCORE
+                <div class='best'>
+                </div>
+            </div>
+            <div class='title'>SCORE
+                <div class='score'>
+                </div>
+            </div>
+            <div class='title'>LINES
+                <div class='lines'>
+                </div>
+            </div>
+            <div class='title'>LEVEL
+                <div class='level'>
+                </div>
+            </div>
+            <a class='restart' onclick="window.location.reload()">Restart</a>         
+        </div>
+    </div>
+    
+    <div id="main">
+        <span class="open-slide">
+            <a href="#" onclick="toggleSlideMenu()">
+            <svg width="30" height="30">
+                <path d="M0,5 30,5" stroke="#000" stroke-width="5"/>
+                <path d="M0,14 30,14" stroke="#000" stroke-width="5"/>
+                <path d="M0,23 30,23" stroke="#000" stroke-width="5"/>
+            </svg>
+            </a>
+        </span>
+    </div>
+    <div class='details'>
         <label class="switch">
-            <span id='mode'><!--switch light--></span>
+            <span class='mode'><!--switch light--></span>
             <input type="checkbox" onclick="night(this)">
             <span class="slider round"></span>
         </label>
         <div class='title best-title'>BEST SCORE
-            <div id='best'>
+            <div class='best'>
             </div>
         </div>
         <div class='title'>SCORE
-            <div id='score'>
+            <div class='score'>
             </div>
         </div>
         <div class='title'>LINES
-            <div id='lines'>
+            <div class='lines'>
             </div>
         </div>
         <div class='title'>LEVEL
-            <div id='level'>
+            <div class='level'>
             </div>
         </div>
-        <a class='restart' onclick="window.location.reload()">Restart</a>
-        
+        <a class='restart' onclick="window.location.reload()">Restart</a>   
     </div>
     
 </body>
@@ -344,6 +486,28 @@ input:checked + .slider:before {
 
 <!-- JavaScript Code: -->
 <script>
+function toggleSlideMenu(){
+      var menu = document.getElementById('side-menu');
+      var main = document.getElementById('main');
+      if (menu.style.width === '0px'){
+        if (window.matchMedia("(max-width: 750px)").matches) {
+        /* the view port is maximum 400 pixels wide */
+            menu.style.width = '60%';
+            main.style.marginLeft = '60%';
+        } else {
+            menu.style.width = '30%';
+            main.style.marginLeft = '30%';
+        }  
+      } else {
+        menu.style.width = '0';
+        main.style.marginLeft = '0';
+      }
+    }
+
+function closeSlideMenu(){
+    document.getElementById('side-menu').style.width = '0';
+    document.getElementById('main').style.marginLeft = '0';
+}
 var world = [
     [0,0,0,0,4,4,0,0,0,0],
     [0,0,0,0,4,4,0,0,0,0],
@@ -914,37 +1078,44 @@ function checkLines(){
             line_count ++;
             //lines keeps track of the number of lines destroyed
             lines++;
-            document.getElementById('lines').innerHTML = lines;
+            document.getElementsByClassName('lines')[0].innerHTML = lines;
+            document.getElementsByClassName('lines')[1].innerHTML = lines;
         }
     }
     if (nbFullLine === 1){
         score = score + 40*(level+1);
-        document.getElementById('score').innerHTML = score;
+        document.getElementsByClassName('score')[0].innerHTML = score;
+        document.getElementsByClassName('score')[1].innerHTML = score;
     } else if (nbFullLine === 2){       
         score = score + 100*(level+1);
-        document.getElementById('score').innerHTML = score;
-        
+        document.getElementsByClassName('score')[0].innerHTML = score;
+        document.getElementsByClassName('score')[1].innerHTML = score;        
     } else if (nbFullLine === 2){       
         score = score + 100*(level+1);
-        document.getElementById('score').innerHTML = score;
+        document.getElementsByClassName('score')[0].innerHTML = score;
+        document.getElementsByClassName('score')[1].innerHTML = score;
     } else if (nbFullLine === 3){       
         score = score + 300*(level+1);
-        document.getElementById('score').innerHTML = score;
+        document.getElementsByClassName('score')[0].innerHTML = score;
+        document.getElementsByClassName('score')[1].innerHTML = score;
     } else if (nbFullLine === 4){       
         score = score + 1200*(level+1);
-        document.getElementById('score').innerHTML = score;
+        document.getElementsByClassName('score')[0].innerHTML = score;
+        document.getElementsByClassName('score')[1].innerHTML = score;
     }
         if (score > localStorage.getItem('best-score')){
             localStorage.setItem('best-score', score);
         }
-        document.getElementById('best').innerHTML = localStorage.getItem('best-score');
+        document.getElementsByClassName('best')[0].innerHTML = localStorage.getItem('best-score');
+        document.getElementsByClassName('best')[1].innerHTML = localStorage.getItem('best-score');
     
 }
 
 function levelup(){
     if (line_count != 0 && line_count>=(5*level)){
         level++;
-        document.getElementById('level').innerHTML = level;
+        document.getElementsByClassName('level')[0].innerHTML = level;
+        document.getElementsByClassName('level')[1].innerHTML = level;
         line_count = 0;
         if (game_speed <= 250 && game_speed >= 50){
             game_speed = game_speed-20;
@@ -1036,13 +1207,14 @@ function ruinsLoop(){
 }
 function night(){
       document.getElementById('body').classList.toggle('active');
-      document.getElementById('mode').classList.toggle('active');
-      document.getElementsByClassName('title')[1].classList.toggle('active');
-      document.getElementsByClassName('title')[2].classList.toggle('active');
-      document.getElementsByClassName('title')[3].classList.toggle('active');
-      document.getElementById('score').classList.toggle('active');
-      document.getElementById('lines').classList.toggle('active');
-      document.getElementById('level').classList.toggle('active');
+      document.getElementsByClassName('mode')[0].classList.toggle('active');
+      document.getElementsByClassName('mode')[1].classList.toggle('active');
+      document.getElementsByClassName('title')[6].classList.toggle('active');
+      document.getElementsByClassName('title')[7].classList.toggle('active');
+      document.getElementsByClassName('title')[8].classList.toggle('active');
+      document.getElementsByClassName('score')[1].classList.toggle('active');
+      document.getElementsByClassName('lines')[1].classList.toggle('active');
+      document.getElementsByClassName('level')[1].classList.toggle('active');
     }
 //initial level, lines and game speed
 var level = 0;
@@ -1057,14 +1229,19 @@ var line_count = 0;
 var count = 0;
 
 if (localStorage.getItem('best-score') !== null){
-    document.getElementById('best').innerHTML = localStorage.getItem('best-score');
+    document.getElementsByClassName('best')[0].innerHTML = localStorage.getItem('best-score');
+    document.getElementsByClassName('best')[1].innerHTML = localStorage.getItem('best-score');
 } else {
-    document.getElementById('best').innerHTML = "0";
+    document.getElementsByClassName('best')[0].innerHTML = "0";
+    document.getElementsByClassName('best')[1].innerHTML = "0";
 }
      
-document.getElementById('lines').innerHTML = "0";
-document.getElementById('level').innerHTML = "0";
-document.getElementById('score').innerHTML = "0";
+document.getElementsByClassName('lines')[0].innerHTML = "0";
+document.getElementsByClassName('lines')[1].innerHTML = "0";
+document.getElementsByClassName('level')[0].innerHTML = "0";
+document.getElementsByClassName('level')[1].innerHTML = "0";
+document.getElementsByClassName('score')[0].innerHTML = "0";
+document.getElementsByClassName('score')[1].innerHTML = "0";
 drawWorld();
 drawRuins();
 gameLoop();

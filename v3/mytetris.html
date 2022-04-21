@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="tetris_style.css" />
+</head>
+<body id="body">
+    <h1>TETRIS</h1>
+    <div id='world'></div>
+    <div id='ruins'></div>
+    <div id='details'>
+        <label class="switch">
+            <span id='mode'><!--switch light--></span>
+            <input type="checkbox" onclick="night(this)">
+            <span class="slider round"></span>
+        </label>
+        <div class='title best-title'>BEST SCORE
+            <div id='best'>
+            </div>
+        </div>
+        <div class='title'>SCORE
+            <div id='score'>
+            </div>
+        </div>
+        <div class='title'>LINES
+            <div id='lines'>
+            </div>
+        </div>
+        <div class='title'>LEVEL
+            <div id='level'>
+            </div>
+        </div>
+        <a class='restart' onclick="window.location.reload()">Restart</a>
+        
+    </div>
+    <script src="tetris_script.js"></script>
+</body>
+</html>

@@ -10,7 +10,7 @@
     <div id='details'>
         <label class="switch">
             <span id='mode'><!--switch light--></span>
-            <input type="checkbox" onclick="night(this)">
+            <input type="checkbox" onclick="toggleNightMode(this)">
             <span class="slider round"></span>
         </label>
         <div class='title best-title'>BEST SCORE
@@ -32,6 +32,18 @@
         <a class='restart' onclick="window.location.reload()">Restart</a>
         
     </div>
-    <script src="tetris_script.js"></script>
+    <script src='./dist/app.bundle.js'></script>
+    <script type='text/javascript'>
+        function toggleNightMode(){
+            document.getElementById('body').classList.toggle('active');
+            document.getElementById('mode').classList.toggle('active');
+            document.getElementsByClassName('title')[1].classList.toggle('active');
+            document.getElementsByClassName('title')[2].classList.toggle('active');
+            document.getElementsByClassName('title')[3].classList.toggle('active');
+            document.getElementById('score').classList.toggle('active');
+            document.getElementById('lines').classList.toggle('active');
+            document.getElementById('level').classList.toggle('active');
+        }
+    </script>
 </body>
 </html>

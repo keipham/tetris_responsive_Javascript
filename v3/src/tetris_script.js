@@ -1,26 +1,4 @@
-class Cell {
-    constructor(value, className) {
-        this.value = value;
-        this.frozenValue = value + 10;
-        this.className = className;
-    }
-
-    getValue() {
-        return this.value;
-    }
-
-    getFrozenValue() {
-        return this.frozenValue;
-    }
-    
-    getClassName() {
-        return this.className;
-    }
-
-    getHtmlTag() {
-        return `<div class='cell ${this.className}'></div>`
-    }
-}
+import Cell from './Cell'
 
 var world = [
     [0,0,0,0,4,4,0,0,0,0],
@@ -118,7 +96,7 @@ function drawRuins() {
     }
 }
 function moveShapesDown() {
-    canMove = true;
+    let canMove = true;
     for(var y=world.length-1; y>=0; y--) {
         for(var x=0; x<world[y].length; x++) {
             if(world[y][x] > 0 && world[y][x] < 10 ){
@@ -143,7 +121,7 @@ function moveShapesDown() {
     checkLines();
 }
 function moveShapesLeft() {
-    canMove = true;
+    let canMove = true;
     for(var y=world.length-1; y>=0; y--) {
         for(var x=0; x<world[y].length; x++) {
             if(world[y][x] > 0 && world[y][x] < 10 ){
@@ -166,7 +144,7 @@ function moveShapesLeft() {
     }
 }
 function moveShapesRight() {
-    canMove = true;
+    let canMove = true;
     for(var y=world.length-1; y>=0; y--) {
         for(var x=0; x<world[y].length; x++) {
             if(world[y][x] > 0 && world[y][x] < 10 ){
@@ -189,7 +167,7 @@ function moveShapesRight() {
     }
 }
 function rotateShapeRight() {
-    canMove = true;
+    let canMove = true;
     for(var y=world.length-1; y>=0; y--) {
         for(var x=0; x<world[y].length; x++) {
             if(world[y][x] > 0 && world[y][x] < 10 ){
@@ -593,7 +571,7 @@ function freeze(){
 function checkLines(){
     var nbFullLine = 0;
     for(var y=world.length-1; y>=0; y--) {
-        fullLine = true;
+        let fullLine = true;
         for(var x=0; x<world[y].length; x++) {
             if(world[y][x] < 10) {
                 fullLine = false;
@@ -727,16 +705,6 @@ function ruinsLoop(){
     }
     drawRuins();
     setTimeout(ruinsLoop, 9000);
-}
-function night(){
-    document.getElementById('body').classList.toggle('active');
-    document.getElementById('mode').classList.toggle('active');
-    document.getElementsByClassName('title')[1].classList.toggle('active');
-    document.getElementsByClassName('title')[2].classList.toggle('active');
-    document.getElementsByClassName('title')[3].classList.toggle('active');
-    document.getElementById('score').classList.toggle('active');
-    document.getElementById('lines').classList.toggle('active');
-    document.getElementById('level').classList.toggle('active');
 }
 
 //initial level, lines and game speed
